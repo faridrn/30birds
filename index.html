@@ -12,30 +12,58 @@
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/modernizr-2.6.2.min.js"></script>
 	</head>
-	<body>
-		<header id="header">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12">
-
+	<body class="bd">
+		<header id="header" class="opaque">
+			<nav class="wrapper navbar navbar-default navbar-fixed-top">
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-6 col-sm-4 col-md-3">
+							<h1 class="logo"><a href="/">30Birds</a></h1>
+						</div>
+						<div class="hidden-3 col-sm-4 col-md-7">
+							Search
+						</div>
+						<div class="col-xs-3 col-sm-4 col-md-2">
+							<a href="#" data-toggle="" data-target=""><i class="icon-user"></i> Farid</a>
+						</div>
 					</div>
 				</div>
-			</div>
+			</nav>
 		</header>
-		<main id="main">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12">
-
+		<main id="mainbody">
+			<div id="panels" class="container">
+				<div class="panel is-carousel" data-conf='{""}'>
+					<div class="panel-title">
+						<a href="#">Channel Title</a>
 					</div>
+					<div class="pane-body">
+						Panel body
+					</div>
+				</div>
+				<div class="panel is-carousel" data-conf='{""}'>
+					<div class="panel-title">
+						Channel 2 Title
+					</div>
+					panel
 				</div>
 			</div>
 		</main>
 		<footer id="footer">
 			<div class="container">
+				<div id="sitemap" class="row">
+					<ul class="list-unstyled list-inline">
+						<li><a href="#">Help Center</a></li>
+						<li><a href="#">About</a></li>
+						<li><a href="#">Terms of Use</a></li>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="#">Contact</a></li>
+						<li><a href="#">API</a></li>
+						<li><a href="#">Advertise</a></li>
+					</ul>
+				</div>
 				<div id="copyright" class="row">
 					<div class="col-xs-12 text-center">
-						&copy; Copyright
+						<p>Copyright &copy; 2016 <span>{App Title}</span>. All rights reserved.</p>
 					</div>
 				</div>
 			</div>
