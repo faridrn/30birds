@@ -1,3 +1,15 @@
 #header {
-    
+    margin-bottom: 0; color: @header-color; height: @header-height; line-height: @header-height;
+    &.opaque { background: none @header-bg-opaque; }
+    & > .wrapper { background: @header-bg; border: 0 none; height: @header-height; }
+    a {
+        color: @header-link-color;
+        &:hover { color: @header-link-hover-color; text-decoration: none; } 
+    }
+}
+.logo {
+    margin: 0; height: @header-height;
+    a {
+        display: block; height: 100%; line-height: @header-height; overflow: hidden; text-indent: -999px; background: url('../img/logo.png') no-repeat left center transparent;
+    }
 }
