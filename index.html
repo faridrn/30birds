@@ -21,23 +21,136 @@
 							<h1 class="logo"><a href="/">30Birds</a></h1>
 						</div>
 						<div class="hidden-3 col-sm-4 col-md-7">
-							Search
+							<div class="search">
+								<div class="form-group">
+									<input type="text" name="q" class="form-control" placeholder="Search..." />
+									<button type="submit" class="search-submit"><i class="icon-search"></i></button>
+								</div>
+							</div>
 						</div>
-						<div class="col-xs-3 col-sm-4 col-md-2">
-							<a href="#" data-toggle="" data-target=""><i class="icon-user"></i> Farid</a>
+						<div id="user-area" class="col-xs-3 col-sm-4 col-md-2">
+							<a href="#" data-toggle="fade" data-target=".user-menu"><i class="icon-user"></i> Farid</a>
+							<ul class="user-menu">
+								<li><a href="#"><i class="icon-wrench"></i> My Profile</a></li>
+								<li><a href="#"><i class="icon-users"></i> Account Settings</a></li>
+								<li><a href="#"><i class="icon-lock"></i> Logout</a></li>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</nav>
 		</header>
 		<main id="mainbody">
+			<!--			<div id="page-title" class="container">
+							<h2>PressTV</h2>
+						</div>-->
 			<div id="panels" class="container">
-				<div class="panel is-carousel" data-conf='{""}'>
+				<div class="panel items is-carousel" data-conf='{""}'>
 					<div class="panel-title">
 						<a href="#">Channel Title</a>
 					</div>
 					<div class="pane-body">
-						Panel body
+						<ul>
+							<li class="video">
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Fight Club</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+							<li class="video">
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Fight Club with larger title</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+							<li class="video">
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Eternal Sunshine of the Spotless Mind</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+							<li>
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Fight Club</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+							<li>
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Fight Club</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+							<li>
+								<figure>
+									<img src="data/11554080.jpg" alt="" />
+									<figcaption>
+										<div class="inner">
+											<h3>Fight Club</h3>
+											<div class="meta">
+												<span class="date">2016-01-25</span>
+												<span class="duration">01:30:26</span>
+											</div>
+										</div>
+									</figcaption>
+								</figure>
+							</li>
+						</ul>
+						<div class="item-info" style="display: none;">
+							<button role="close" data-toggle="slide" data-target=".item-info">&times;</button>
+							<figure class="poster">
+								<img src="data/11554080.jpg" alt="" />
+								<a href="#" class="play"><i class="icon-play"></i></a>
+							</figure>
+							<div class="details">
+								<h3><a href="#">Fight Club</a></h3>
+								<div class="meta">
+									<span class="date">Date: 2016-01-25</span>
+									<span class="duration">Duration: 01:30:26</span>
+								</div>
+								<p>Events are provided by Owl Carousel in strategic code locations. This gives you the ability to listen for any changes and perform your own actions. Events are provided by Owl Carousel in strategic code locations. This gives you the ability to listen for any changes and perform your own actions.</p>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="panel is-carousel" data-conf='{""}'>
@@ -69,6 +182,7 @@
 			</div>
 		</footer>
 		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>
