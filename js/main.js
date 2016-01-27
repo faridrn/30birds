@@ -29,12 +29,21 @@ $(function () {
     });
     
     $(document).on('click', ".carousel .item", function(e) {
-        $(this).toggleClass('preview');
-        var $info = $(this).parents(".panel").find(".item-info");
+        var $item = $(this);
+        var $info = $item.parents(".panel").find(".item-info");
+        if ($item.hasClass('preview')) {
+            $info.slideUp(function() {
+                // empty info
+                $item.removeClass('preview');
+            });
+            return;
+        }
+        $item.parent().find(".item").removeClass("preview");
+        $item.addClass('preview');
+        var id = $(this).find("li[data-id]").attr('data-id');
+        // load item id
         if (!$info.is(":visible"))
             $info.slideDown();
-        else
-            $info.slideUp();
     });
 
     $(".is-carousel").each(function () {
@@ -50,7 +59,7 @@ $(function () {
 //            , navContainer: $nav
             , navContainerClass: 'pagers'
             , navClass: ['prev', 'next']
-            , navText: ['', '']
+            , navText: ['', '']
             , loop: true
             , themeClass: 'carousel-theme'
             , baseClass: 'carousel'
