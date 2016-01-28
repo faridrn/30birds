@@ -25,15 +25,18 @@
             background: transparent; border: 0 none; box-shadow: 0 0 0 transparent; color: #fff; text-indent: 40px; width: 120px; transition: all 0.4s;
             &:focus { box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6); background: rgba(255, 255, 255, 0.10); width: 280px; }
         }
-        button { background: transparent; border: 0 none; line-height: 30px; position: absolute; top: 0; left: 0; font-size: 16px; }
+        button[type="submit"] { background: transparent; border: 0 none; line-height: 30px; position: absolute; top: 0; left: 0; font-size: 16px; padding: 0; width: 30px; }
+        button[role="close"] { display: none; }
     }
 }
+.responsive-icon { background: transparent; border: 0 none; box-shadow: 0 0 0 transparent; }
 
 #user-area {
     position: relative;
     & > a { text-align: center; display: block; }
     .user-menu {
-        list-style: none; padding: 0; margin: 0; line-height: 1.3em; position: absolute; top: @header-height; background: darken(@gray-darker, 10%); padding: 8px 0; width: 200px; margin-left: -40px; opacity: 0; transition-property: opacity, visibility; transition-duration: .2s, 0s; transition-delay: 0s, .2s;
+        list-style: none; padding: 0; margin: 0; line-height: 1.3em; position: absolute; top: @header-height;
+        background: darken(@gray-darker, 10%); padding: 8px 0; width: 200px; margin-left: -40px; opacity: 0; transition-property: opacity, visibility; transition-duration: .2s, 0s; transition-delay: 0s, .2s;
  visibility: hidden;
         &:before { display: block; content: ''; width: 0; height: 0; border-bottom: 8px solid darken(@gray-darker, 10%); border-left: 8px solid transparent; border-right: 8px solid transparent; position: absolute; top: -8px; left: 50%; margin-left: -4px; }
         li {

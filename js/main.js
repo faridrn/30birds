@@ -1,7 +1,13 @@
 $(function () {
     
     $(document).on('click', "[data-toggle]", function (e) {
-        var $target = $($(this).attr('data-target'));
+        var target = $(this).attr('data-target');
+        if (target.indexOf('$this') !== -1) {
+            target.replace('$this', '');
+            var $target = $(target).parents(".panel").find(target);
+        } else
+            var $target = $(target);
+//        var $target = $($(this).attr('data-target'));
         switch ($(this).attr('data-toggle')) {
             case 'class':
                 $target.toggleClass($(this).attr('data-value'));
@@ -45,6 +51,11 @@ $(function () {
         if (!$info.is(":visible"))
             $info.slideDown();
     });
+    
+    $(document).on('click', ".search button[role=close]", function(e) {
+        $(".search").fadeOut();
+        e.preventDefault();
+    });
 
     $(".is-carousel").each(function () {
         $(this).find("ul").owlCarousel({
@@ -52,7 +63,9 @@ $(function () {
                 1199: {items: 5}
                 , 996: {items: 4}
                 , 768: {items: 3}
-                , 480: {items: 2}
+//                , 480: {items: 2}
+                , .0: {items: 2}
+//                , 0: {items: 1}
             }
             , items: 5
             , nav: true
