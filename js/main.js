@@ -3,11 +3,11 @@ $(function () {
     $(document).on('click', "[data-toggle]", function (e) {
         var target = $(this).attr('data-target');
         if (target.indexOf('$this') !== -1) {
-            target.replace('$this', '');
-            var $target = $(target).parents(".panel").find(target);
+            target = target.replace("$this ", "");
+            var $target = $(target).parents(".panel:first").find(target);
         } else
             var $target = $(target);
-//        var $target = $($(this).attr('data-target'));
+        
         switch ($(this).attr('data-toggle')) {
             case 'class':
                 $target.toggleClass($(this).attr('data-value'));
