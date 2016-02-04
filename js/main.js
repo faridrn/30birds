@@ -1,5 +1,37 @@
 $(function () {
 
+    //////////////
+    $.ajax({
+        url: Services.itemsT
+        , success: function (d) {
+            var source = $("#items-template").html();
+            var template = Handlebars.compile(source);
+            var html = template(d);
+            $("#panels").html(html).promise().done(function () {
+                var panelCount = $("#panels .panel").length
+                var count = 0;
+                $("#panels .panel").each(function () {
+                    var id = $(this).attr('data-id');
+                    $.ajax({
+                        url: Services.queryT
+                        , success: function (d) {
+                            var source = $("#children-template").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(d);
+                            $("ul#items-" + id).html(html).promise().done(function() {
+                                count++;
+                                if (count === panelCount)
+                                    createCarousel($("ul#items-" + id));
+                            })
+                        }
+                    });
+                });
+            });
+        }
+    });
+
+    //////////////
+
     $(document).on('click', "[data-toggle]", function (e) {
         var target = $(this).attr('data-target');
         if (target.indexOf('$this') !== -1) {
@@ -7,7 +39,7 @@ $(function () {
             var $target = $(target).parents(".panel:first").find(target);
         } else
             var $target = $(target);
-        
+
         switch ($(this).attr('data-toggle')) {
             case 'class':
                 $target.toggleClass($(this).attr('data-value'));
@@ -37,7 +69,7 @@ $(function () {
     $(document).on('submit', ".login-form", function (e) {
         var data = $(this).serializeObject();
         $.ajax({
-            url: Services.base + Services.login
+            url: Services.login
             , type: 'GET'
             , dataType: 'jsonp'
             , data: data
@@ -45,7 +77,7 @@ $(function () {
                 if (typeof data[0].token !== "undefined" && data[0].token !== "")
                     Cookie.set(data[0].token, '/');
 //                else
-                    // Handle error message
+                // Handle error message
             }
         });
         e.preventDefault();
@@ -74,28 +106,6 @@ $(function () {
         e.preventDefault();
     });
 
-    $(".is-carousel").each(function () {
-        $(this).find("ul").owlCarousel({
-            responsive: {
-                1199: {items: 5}
-                , 996: {items: 4}
-                , 768: {items: 3}
-                , .0: {items: 2}
-            }
-            , items: 5
-            , nav: true
-//            , navContainer: $nav
-            , navContainerClass: 'pagers'
-            , navClass: ['prev', 'next']
-            , navText: ['', '']
-            , loop: true
-            , themeClass: 'carousel-theme'
-            , baseClass: 'carousel'
-            , itemClass: 'item'
-            , dots: false
-        });
-    });
-
     $(document).scroll(function () {
         var offset = $(window).scrollTop();
         if (offset > 70)
@@ -103,6 +113,7 @@ $(function () {
         else
             $("#header").removeClass("opaque");
     });
+
 });
 function responsive_resize() {
     var current_width = $(window).width();
@@ -121,3 +132,31 @@ responsive_resize();
 $(window).resize(function () { // Change width value on user resize, after DOM
     responsive_resize();
 });
+
+function createCarousel($carousel) {
+    console.log($carousel);
+    if (!$carousel.length)
+        return false;
+
+//    $carousels.each(function () {
+    $carousel.owlCarousel({
+        responsive: {
+            1199: {items: 5}
+            , 996: {items: 4}
+            , 768: {items: 3}
+            , 0: {items: 2}
+        }
+        , items: 5
+        , nav: true
+//            , navContainer: $nav
+        , navContainerClass: 'pagers'
+        , navClass: ['prev', 'next']
+        , navText: ['', '']
+        , loop: true
+        , themeClass: 'carousel-theme'
+        , baseClass: 'carousel'
+        , itemClass: 'item'
+        , dots: false
+    });
+//    });
+}

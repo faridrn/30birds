@@ -4,8 +4,12 @@ var Config = {
     html5mode: true
 };
 var Services = {
-    base: 'http://www.irinn.ir:8080/webservice.asmx/'
-    , login: 'getToken'
+    base: 'http://192.168.103.250:83/'
+    , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
+    , items: 'content/ott.json'
+    , query: 'query/getsectionjson/'
+    , itemsT: '/data/ott.json'
+    , queryT: '/data/section.json'
 };
 var Request = {
     log: function (data) {
@@ -68,6 +72,9 @@ var Location = {
     , refresh: function () {
         location.reload();
     }
+    , paths: {
+        
+    }
 };
 var Cookie = {
     lifetime: 1209600 // exp in minutes
@@ -119,7 +126,6 @@ var Cookie = {
         return null;
     }
 };
-
 
 // Plugins
 $.fn.serializeObject = function () { // serializeArray - serialize form as an array instead of default object

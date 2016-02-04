@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/modernizr-2.6.2.min.js"></script>
 		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/handlebars-v4.0.5.js"></script>
 		<script src="js/header.js"></script>
 	</head>
 	<body class="bd">
@@ -46,330 +47,7 @@
 		</header>
 		<main id="mainbody">
 			<div id="panels" class="container">
-				<div class="panel items is-carousel" data-conf='{""}'>
-					<div class="panel-title">
-						<a href="#">PressTV</a>
-					</div>
-					<div class="pane-body">
-						<ul>
-							<li class="video" data-id="1">
-								<figure>
-									<img src="data/11554080.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Hollywood and Incitement of Islamophobia</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="2">
-								<figure>
-									<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Hollywood and Incitement of Islamophobia</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="3">
-								<figure>
-									<img src="data/b16bfcde-0a06-492d-925e-758dcc44108f.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Eternal Sunshine of the Spotless Mind</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="4">
-								<figure>
-									<img src="data/23735823.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="5">
-								<figure>
-									<img src="data/23522505.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="6">
-								<figure>
-									<img src="data/23380754.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-						</ul>
-						<div class="item-info" style="display: none;">
-							<button role="close" data-toggle="slide" data-target="$this .item-info">&times;</button>
-							<figure class="poster">
-								<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
-								<a href="#" class="play"><i class="icon-play"></i></a>
-							</figure>
-							<div class="details">
-								<h3><a href="#">Hollywood and Incitement of Islamophobia</a></h3>
-								<div class="meta">
-									<span class="date">Date: 2016-01-25</span>
-									<span class="duration">Duration: 01:30:26</span>
-								</div>
-								<p>The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film. The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel items is-carousel" data-conf='{""}'>
-					<div class="panel-title">
-						<a href="#">iFilm</a>
-					</div>
-					<div class="pane-body">
-						<ul>
-							<li class="video" data-id="1">
-								<figure>
-									<img src="data/fb40d283-ce2e-402a-b06e-8415ff8767dd.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="2">
-								<figure>
-									<img src="data/10935956.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club with larger title</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="3">
-								<figure>
-									<img src="data/11613831.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Eternal Sunshine of the Spotless Mind</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="4">
-								<figure>
-									<img src="data/23380754.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="5">
-								<figure>
-									<img src="data/23522505.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="6">
-								<figure>
-									<img src="data/23735823.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-						</ul>
-						<div class="item-info" style="display: none;">
-							<button role="close" data-toggle="slide" data-target="$this .item-info">&times;</button>
-							<figure class="poster">
-								<img src="data/b16bfcde-0a06-492d-925e-758dcc44108f.jpg" alt="" />
-								<a href="#" class="play"><i class="icon-play"></i></a>
-							</figure>
-							<div class="details">
-								<h3><a href="#">Fight Club</a></h3>
-								<div class="meta">
-									<span class="date">Date: 2016-01-25</span>
-									<span class="duration">Duration: 01:30:26</span>
-								</div>
-								<p>Events are provided by Owl Carousel in strategic code locations. This gives you the ability to listen for any changes and perform your own actions. Events are provided by Owl Carousel in strategic code locations. This gives you the ability to listen for any changes and perform your own actions.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel items is-carousel" data-conf='{""}'>
-					<div class="panel-title">
-						<a href="#">HispanTV</a>
-					</div>
-					<div class="pane-body">
-						<ul>
-							<li data-id="5">
-								<figure>
-									<img src="data/23522505.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="3">
-								<figure>
-									<img src="data/b16bfcde-0a06-492d-925e-758dcc44108f.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Eternal Sunshine of the Spotless Mind</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="2">
-								<figure>
-									<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Hollywood and Incitement of Islamophobia</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li class="video" data-id="1">
-								<figure>
-									<img src="data/11554080.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Hollywood and Incitement of Islamophobia</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="4">
-								<figure>
-									<img src="data/23735823.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-							<li data-id="6">
-								<figure>
-									<img src="data/23380754.jpg" alt="" />
-									<figcaption>
-										<div class="inner">
-											<h3>Fight Club</h3>
-											<div class="meta">
-												<span class="date">2016-01-25</span>
-												<span class="duration">01:30:26</span>
-											</div>
-										</div>
-									</figcaption>
-								</figure>
-							</li>
-						</ul>
-						<div class="item-info" style="display: none;">
-							<button role="close" data-toggle="slide" data-target=".item-info">&times;</button>
-							<figure class="poster">
-								<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
-								<a href="#" class="play"><i class="icon-play"></i></a>
-							</figure>
-							<div class="details">
-								<h3><a href="#">Hollywood and Incitement of Islamophobia</a></h3>
-								<div class="meta">
-									<span class="date">Date: 2016-01-25</span>
-									<span class="duration">Duration: 01:30:26</span>
-								</div>
-								<p>The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film. The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film.</p>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 			</div>
 		</main>
 		<footer id="footer">
@@ -394,5 +72,53 @@
 		</footer>
 		<script src="js/owl.carousel.min.js"></script>
 		<script src="js/main.js"></script>
+
+		<script id="children-template" type="text/x-handlebars-template">
+			{{#each []}}
+			<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-summary="{{Summary}}">
+				<figure>
+					<img src="http://217.218.67.233{{Thumbnail}}" alt="{{Title}}" />
+					<figcaption>
+						<div class="inner">
+							<h3>{{Title}}</h3>
+							<div class="meta">
+								<span class="date">{{PubDate}}</span>
+								<span class="duration"></span>
+							</div>
+						</div>
+					</figcaption>
+				</figure>
+			</li>
+			{{/each}}
+		</script>
+		<script id="items-template" type="text/x-handlebars-template">
+			{{#each []}}
+			<div class="panel items is-carousel" data-conf='{""}' data-id="{{id}}">
+				<div class="panel-title">
+					<a href="#">{{name}}</a>
+				</div>
+				<div class="panel-body">
+					<ul id="items-{{id}}">
+
+					</ul>
+					<div class="item-info" style="display: none;">
+						<button role="close" data-toggle="slide" data-target="$this .item-info">&times;</button>
+						<figure class="poster">
+							<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
+							<a href="#" class="play"><i class="icon-play"></i></a>
+						</figure>
+						<div class="details">
+							<h3><a href="#">Hollywood and Incitement of Islamophobia</a></h3>
+							<div class="meta">
+								<span class="date">Date: 2016-01-25</span>
+								<span class="duration">Duration: 01:30:26</span>
+							</div>
+							<p>The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film. The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{/each}}
+		</script>
 	</body>
 </html>
