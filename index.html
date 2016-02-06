@@ -77,7 +77,7 @@
 			{{#each []}}
 			<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-summary="{{Summary}}">
 				<figure>
-					<img src="http://217.218.67.233{{Thumbnail}}" alt="{{Title}}" />
+					<img src="{{Thumbnail}}" alt="{{Title}}" />
 					<figcaption>
 						<div class="inner">
 							<h3>{{Title}}</h3>
@@ -95,7 +95,11 @@
 			{{#each []}}
 			<div class="panel items is-carousel" data-conf='{""}' data-id="{{id}}">
 				<div class="panel-title">
-					<a href="#">{{name}}</a>
+					{{#if haschildren}}
+					<a href="/{{name}}-{{id}}/">{{name}}</a>
+					{{else}}
+					{{name}}
+					{{/if}}
 				</div>
 				<div class="panel-body">
 					<ul id="items-{{id}}">

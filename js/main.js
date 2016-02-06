@@ -1,35 +1,37 @@
 $(function () {
 
     //////////////
-    $.ajax({
-        url: Services.itemsT
-        , success: function (d) {
-            var source = $("#items-template").html();
-            var template = Handlebars.compile(source);
-            var html = template(d);
-            $("#panels").html(html).promise().done(function () {
-                var panelCount = $("#panels .panel").length
-                var count = 0;
-                $("#panels .panel").each(function () {
-                    var id = $(this).attr('data-id');
-                    $.ajax({
-                        url: Services.queryT
-                        , success: function (d) {
-                            var source = $("#children-template").html();
-                            var template = Handlebars.compile(source);
-                            var html = template(d);
-                            $("ul#items-" + id).html(html).promise().done(function() {
-                                count++;
-                                if (count === panelCount)
-                                    createCarousel($("ul#items-" + id));
-                            })
-                        }
+    if (typeof Handlebars === "object") {
+        $.ajax({
+            url: Services.base + Services.items
+            , success: function (d) {
+                var source = $("#items-template").html();
+                var template = Handlebars.compile(source);
+                var html = template(d);
+                $("#panels").html(html).promise().done(function () {
+                    var panelCount = $("#panels .panel").length
+                    var count = 0;
+                    $("#panels .panel").each(function () {
+                        var id = $(this).attr('data-id');
+                        $.ajax({
+                            url: Services.base + Services.query + id
+                            , success: function (d) {
+                                var source = $("#children-template").html();
+                                var template = Handlebars.compile(source);
+                                var html = template(d);
+                                $("ul#items-" + id).html(html).promise().done(function () {
+                                    count++;
+                                    if (count === panelCount)
+                                        createCarousel($(".is-carousel ul"));
+                                })
+                            }
+                        });
                     });
                 });
-            });
-        }
-    });
-
+            }
+        });
+    } else
+        debug && console.log('Handlebars not loaded');
     //////////////
 
     $(document).on('click', "[data-toggle]", function (e) {
@@ -76,8 +78,6 @@ $(function () {
             , success: function (data) {
                 if (typeof data[0].token !== "undefined" && data[0].token !== "")
                     Cookie.set(data[0].token, '/');
-//                else
-                // Handle error message
             }
         });
         e.preventDefault();
@@ -113,7 +113,6 @@ $(function () {
         else
             $("#header").removeClass("opaque");
     });
-
 });
 function responsive_resize() {
     var current_width = $(window).width();

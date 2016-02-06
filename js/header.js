@@ -4,9 +4,9 @@ var Config = {
     html5mode: true
 };
 var Services = {
-    base: 'http://192.168.103.250:83/'
+    base: 'http://217.218.67.231/'
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
-    , items: 'content/ott.json'
+    , items: 'content/0.json'
     , query: 'query/getsectionjson/'
     , itemsT: '/data/ott.json'
     , queryT: '/data/section.json'
@@ -146,6 +146,6 @@ $.fn.serializeObject = function () { // serializeArray - serialize form as an ar
 
 // Check token
 var token = Cookie.check();
-if (typeof token === "undefined" || token === null)
-    if (Location.get() !== '/login.html')
-        Location.redirect('/login.html');
+//if (typeof token === "undefined" || token === null)
+//    if (Location.get() !== '/login.html')
+//        Location.redirect('/login.html');
