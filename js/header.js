@@ -6,10 +6,8 @@ var Config = {
 var Services = {
     base: 'http://217.218.67.231/'
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
-    , items: 'content/0.json'
-    , query: 'query/getsectionjson/'
-    , itemsT: '/data/ott.json'
-    , queryT: '/data/section.json'
+    , items: 'content/{pid}.json'
+    , query: 'query/getsectionjson/{id}'
 };
 var Request = {
     log: function (data) {

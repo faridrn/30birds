@@ -1,38 +1,92 @@
-$(function () {
+var App = {
+    start: function (that) {
+        var locationHandler = new HandleLocation(Location.get());
+        var data = new Data(locationHandler.id);
+    }
+};
 
-    //////////////
-    if (typeof Handlebars === "object") {
+function HandleLocation(url) {
+    "use strict";
+
+    this.url = url;
+    this.id;
+
+    this.getId = function (url) {
+        var parts = url.split('/');
+        var last = parts.pop();
+        var part = (last !== "") ? last : parts.pop();
+        var id = part.split('-')[0];
+        return id;
+    };
+
+    var __construct = function (that) {
+        that.id = that.getId(that.url);
+    }(this);
+}
+;
+
+function Data(id) {
+    this.id = id;
+    this.params;
+    this.getParams = function (pid) {
+        var pid = (typeof pid === "undefined" || pid === "") ? 0 : pid;
+        return params = {
+            parentId: pid
+            , url: Services.base + Services.items.replace(/{pid}/gi, pid)
+            , childrenUrl: Services.base + Services.query
+            , template: $("#items-template").html()
+            , childrenTemplate: $("#children-template").html()
+            , data: null
+            , container: $("#panels")
+        };
+    };
+    this.loadParent = function (params) {
+        var o = this;
         $.ajax({
-            url: Services.base + Services.items
+            url: params.url
             , success: function (d) {
-                var source = $("#items-template").html();
-                var template = Handlebars.compile(source);
-                var html = template(d);
-                $("#panels").html(html).promise().done(function () {
-                    var panelCount = $("#panels .panel").length
-                    var count = 0;
-                    $("#panels .panel").each(function () {
-                        var id = $(this).attr('data-id');
-                        $.ajax({
-                            url: Services.base + Services.query + id
-                            , success: function (d) {
-                                var source = $("#children-template").html();
-                                var template = Handlebars.compile(source);
-                                var html = template(d);
-                                $("ul#items-" + id).html(html).promise().done(function () {
-                                    count++;
-                                    if (count === panelCount)
-                                        createCarousel($(".is-carousel ul"));
-                                })
-                            }
-                        });
-                    });
+                params.data = d;
+                var templateHtml = o.compileTemplate(params.template, d);
+                params.container.html(templateHtml).promise().done(function () {
+                    o.loadChildren(params, d);
                 });
             }
         });
-    } else
-        debug && console.log('Handlebars not loaded');
-    //////////////
+        return params;
+    };
+    this.loadChildren = function (params, data) {
+        var o = this;
+        $.each(data, function () {
+            var id = this.id;
+            var url = params.childrenUrl.replace(/{id}/gi, id);
+            $.ajax({
+                url: url
+                , success: function (d) {
+                    var templateHtml = o.compileTemplate(params.childrenTemplate, d);
+                    $("ul#items-" + id).html(templateHtml).promise().done(function () {
+                        createCarousel($("ul#items-" + id));
+                    });
+                }
+            });
+        });
+
+        return params;
+    };
+    this.compileTemplate = function (tmpl, data) {
+        var template = Handlebars.compile(tmpl);
+        var html = template(data);
+        return html;
+    };
+
+    var __construct = function (that) {
+        that.params = that.getParams(id);
+        that.loadParent(that.params);
+    }(this);
+}
+;
+
+$(function () {
+    App.start();
 
     $(document).on('click', "[data-toggle]", function (e) {
         var target = $(this).attr('data-target');
@@ -133,7 +187,6 @@ $(window).resize(function () { // Change width value on user resize, after DOM
 });
 
 function createCarousel($carousel) {
-    console.log($carousel);
     if (!$carousel.length)
         return false;
 
@@ -159,3 +212,4 @@ function createCarousel($carousel) {
     });
 //    });
 }
+

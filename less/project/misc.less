@@ -1,6 +1,16 @@
 html, body { height: 100%; }
 a { outline: 0 none; transition: @t; }
 
+.pace {
+    -webkit-pointer-events: none; pointer-events: none; 
+    -webkit-user-select: none; -moz-user-select: none; user-select: none;
+    
+    &.pace-inactive { display: none; }
+    .pace-progress {
+        background: @blue; width: 100%; height: 4px; margin: 0 auto; position: fixed; z-index: 2000; top: 0; right: 100%; opacity: 0.9;
+        pace-progress-inner { margin: 0 auto; }
+    }
+}
 
 .carousel {
     display: none;
