@@ -40,7 +40,7 @@ var Location = {
         Location.history.push(fragments);
         Location.parts = Location.parse(fragments);
     }
-    , get: function(full) {
+    , get: function (full) {
         return (typeof full !== "undefined" && full === true) ? location.href : location.pathname;
     }
     , parse: function (fragments) {
@@ -71,7 +71,6 @@ var Location = {
         location.reload();
     }
     , paths: {
-        
     }
 };
 var Cookie = {
@@ -106,10 +105,10 @@ var Cookie = {
         d.setTime(d.getTime() + (Cookie.lifetime * 1000));
         var expires = 'expires=' + d.toGMTString();
         document.cookie = cname + data + '; ' + expires + '; path=/';
-        
+
         if (typeof redirect !== "undefined" && redirect !== "")
             Location.redirect(redirect);
-        
+
         return data;
     }
     , get: function (name) {
@@ -141,6 +140,19 @@ $.fn.serializeObject = function () { // serializeArray - serialize form as an ar
     });
     return o;
 };
+
+// Location change
+(function (history) {
+    var pushState = history.pushState;
+    history.pushState = function (state) {
+        if (typeof history.onpushstate === "function") {
+            history.onpushstate({state: state});
+        }
+        // ... whatever else you want to do
+        // maybe call onhashchange e.handler
+        return pushState.apply(history, arguments);
+    };
+})(window.history);
 
 // Check token
 var token = Cookie.check();

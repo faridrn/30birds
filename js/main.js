@@ -1,10 +1,40 @@
 var App = {
-    start: function (that) {
-        var locationHandler = new HandleLocation(Location.get());
-        var data = new Data(locationHandler.id);
+    firstInit: false
+    , start: function (title) {
+        new Data(new HandleLocation(Location.get()).id);
+        document.title = (typeof title === "undefined") ? Global.pageTitle : Global.pageTitle + ' - ' + title; // Set title
+        if (App.firstInit === false) {
+            App.firstInit = true;
+            App.addListeners();
+        }
+    }
+    , navigate: function (params) {
+        history.pushState(null, params.title, params.href);
+        App.start(params.title);
+    }
+    , addListeners: function () {
+        window.onpopstate = history.onpushstate = function (e) {
+            if (e.type === 'popstate')
+                App.start();
+        };
+
+        // Resoinsive Utilities
+        responsive_resize();
+        $(window).resize(function () { // Change width value on user resize, after DOM
+            responsive_resize();
+        });
+        return null;
     }
 };
-
+var Global = {
+    pageTitle: '30Birds'
+    , getLinkParams: function ($obj) {
+        return {
+            href: $obj.attr('href')
+            , title: $obj.attr('href').split('-')[1].replace('/', '')
+        };
+    }
+};
 function HandleLocation(url) {
     "use strict";
 
@@ -23,7 +53,6 @@ function HandleLocation(url) {
         that.id = that.getId(that.url);
     }(this);
 }
-;
 
 function Data(id) {
     this.id = id;
@@ -56,9 +85,10 @@ function Data(id) {
     };
     this.loadChildren = function (params, data) {
         var o = this;
+//        console.log(data);
         $.each(data, function () {
             var id = this.id;
-            var url = params.childrenUrl.replace(/{id}/gi, id);
+            var url = this.url;
             $.ajax({
                 url: url
                 , success: function (d) {
@@ -77,16 +107,33 @@ function Data(id) {
         var html = template(data);
         return html;
     };
+    this.updateBreadcrumbs = function () {
+        var urlParts = Location.get().split('/');
+        $("#breadcrumbs ol").empty();
+        if (urlParts.length > 3) {
+            for (var i = 0; i < urlParts.length; i++) {
+                urlParts.pop();
+                link = '<li><a class="page" href="' + urlParts.join('/') + '">' + urlParts[urlParts.length - 1].split('-')[1] + '</a></li>';
+                $("#breadcrumbs ol").prepend(link);
+            }
+        }
+    };
 
     var __construct = function (that) {
         that.params = that.getParams(id);
         that.loadParent(that.params);
+        that.updateBreadcrumbs();
     }(this);
 }
-;
 
 $(function () {
     App.start();
+
+    $(document).on('click', "a.page", function (e) {
+        var o = Global.getLinkParams($(this));
+        App.navigate(o);
+        e.preventDefault();
+    });
 
     $(document).on('click', "[data-toggle]", function (e) {
         var target = $(this).attr('data-target');
@@ -139,6 +186,7 @@ $(function () {
 
     $(document).on('click', ".carousel .item", function (e) {
         var $item = $(this);
+        var $li = $(this).find("li:first");
         var $info = $item.parents(".panel").find(".item-info");
         if ($item.hasClass('preview')) {
             $info.slideUp(function () {
@@ -150,7 +198,14 @@ $(function () {
         $item.parent().find(".item").removeClass("preview");
         $item.addClass('preview');
         var id = $(this).find("li[data-id]").attr('data-id');
+        
         // load item id
+        $info.find('.poster img').attr('src', $li.attr('data-image'));
+        $info.find('a.play').attr('href', $li.attr('data-media'));
+        $info.find('.details h3 a').text($li.find("h3").text());
+        $info.find('.details p').text($li.attr('data-summary'));
+        $info.find('.meta .date').text($li.find('.date').text());
+        
         if (!$info.is(":visible"))
             $info.slideDown();
     });
@@ -181,10 +236,6 @@ function responsive_resize() {
         $('body').addClass("_lg").removeClass("_xs _sm _md");
     }
 }
-responsive_resize();
-$(window).resize(function () { // Change width value on user resize, after DOM
-    responsive_resize();
-});
 
 function createCarousel($carousel) {
     if (!$carousel.length)
@@ -212,4 +263,3 @@ function createCarousel($carousel) {
     });
 //    });
 }
-

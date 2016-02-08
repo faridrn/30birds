@@ -2,9 +2,7 @@ html, body { height: 100%; }
 a { outline: 0 none; transition: @t; }
 
 .pace {
-    -webkit-pointer-events: none; pointer-events: none; 
-    -webkit-user-select: none; -moz-user-select: none; user-select: none;
-    
+    -webkit-pointer-events: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none; user-select: none;
     &.pace-inactive { display: none; }
     .pace-progress {
         background: @blue; width: 100%; height: 4px; margin: 0 auto; position: fixed; z-index: 2000; top: 0; right: 100%; opacity: 0.9;
@@ -192,25 +190,6 @@ a { outline: 0 none; transition: @t; }
         z-index: 1;
     }
 }
-
-@-webkit-keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
 .owl-height {
     -webkit-transition: height 500ms ease-in-out;
     -moz-transition: height 500ms ease-in-out;
@@ -218,9 +197,26 @@ a { outline: 0 none; transition: @t; }
     -o-transition: height 500ms ease-in-out;
     transition: height 500ms ease-in-out;
 }
-
 .no-js {
     .owl-carousel {
         display: block;
+    }
+}
+@keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+
+.breadcrumb {
+    background: transparent; margin-top: @grid-gutter-width; margin-bottom: 0; padding-left: 0;
+    & > li {
+        color: @gray;
+        &.active { color: @gray; }
+        & + li{
+            padding-left: 8px;
+            &:before { content: '\e819\00a0\00a0\00a0'; font-family: 'ott'; }
+        }
+    }
+    a {
+        color: @gray-light;
+        &:hover { color: #fff; text-decoration: none; }
     }
 }

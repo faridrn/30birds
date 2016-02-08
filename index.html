@@ -16,6 +16,8 @@
 		<script src="/js/handlebars-v4.0.5.js"></script>
 		<script src="/js/pace.min.js"></script>
 		<script src="/js/header.js"></script>
+		<script src="/js/owl.carousel.min.js"></script>
+		<script src="/js/main.js"></script>
 	</head>
 	<body class="bd">
 		<header id="header" class="">
@@ -53,8 +55,11 @@
 			</nav>
 		</header>
 		<main id="mainbody">
+			<div id="breadcrumbs" class="container">
+				<ol class="breadcrumb"></ol>
+			</div>
 			<div id="panels" class="container">
-				
+
 			</div>
 		</main>
 		<footer id="footer">
@@ -77,12 +82,10 @@
 				</div>
 			</div>
 		</footer>
-		<script src="/js/owl.carousel.min.js"></script>
-		<script src="/js/main.js"></script>
 
 		<script id="children-template" type="text/x-handlebars-template">
 			{{#each []}}
-			<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-summary="{{Summary}}">
+			<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}">
 				<figure>
 					<img src="{{Thumbnail}}" alt="{{Title}}" />
 					<figcaption>
@@ -90,7 +93,7 @@
 							<h3>{{Title}}</h3>
 							<div class="meta">
 								<span class="date">{{PubDate}}</span>
-								<span class="duration"></span>
+								<span class="duration hide"></span>
 							</div>
 						</div>
 					</figcaption>
@@ -102,29 +105,23 @@
 			{{#each []}}
 			<div class="panel items is-carousel" data-conf='{""}' data-id="{{id}}">
 				<div class="panel-title">
-					{{#if haschildren}}
-					<a href="{{id}}-{{name}}/">{{name}}</a>
-					{{else}}
-					{{name}}
-					{{/if}}
+					{{#if haschildren}}<a class="page" href="{{id}}-{{name}}/">{{name}}</a>{{else}}{{name}}{{/if}}
 				</div>
 				<div class="panel-body">
-					<ul id="items-{{id}}">
-
-					</ul>
+					<ul id="items-{{id}}"></ul>
 					<div class="item-info" style="display: none;">
-						<button role="close" data-toggle="slide" data-target="$this .item-info">&times;</button>
+						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
-							<img src="data/c89a794f-b618-44cd-b1b5-b897316e33ac.jpg" alt="" />
-							<a href="#" class="play"><i class="icon-play"></i></a>
+							<img src="" alt="" />
+							<a href="" class="play"><i class="icon-play"></i></a>
 						</figure>
 						<div class="details">
-							<h3><a href="#">Hollywood and Incitement of Islamophobia</a></h3>
+							<h3><a class="play" href=""></a></h3>
 							<div class="meta">
 								<span class="date">Date: 2016-01-25</span>
-								<span class="duration">Duration: 01:30:26</span>
+								<span class="duration hide"></span>
 							</div>
-							<p>The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film. The program discusses the movie "Deliver Us from Evil" and analyses the Iranophobic propaganda in this film.</p>
+							<p></p>
 						</div>
 					</div>
 				</div>
