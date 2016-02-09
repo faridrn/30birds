@@ -34,6 +34,25 @@ var Global = {
             , title: $obj.attr('href').split('-')[1].replace('/', '')
         };
     }
+    , Player: {
+        setup: function (obj, file, image) {
+            jwplayer(obj).setup({
+                abouttext: "30Birds"
+                , aboutlink: "http://"
+                , file: file
+                , image: image
+                , width: '100%'
+//                , height: '100%'
+                , aspectratio: '16:9'
+                , stretching: "uniform"
+                , controls: !0
+                , autostart: !1
+            });
+        }
+        , remove: function(obj) {
+            jwplayer(obj).remove();
+        }
+    }
 };
 function HandleLocation(url) {
     "use strict";
@@ -134,6 +153,13 @@ $(function () {
         App.navigate(o);
         e.preventDefault();
     });
+    
+    $(document).on('click', "a.play", function (e) {
+        var $this = $(this);
+        $("#player-modal").modal();
+        Global.Player.setup('mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+        e.preventDefault();
+    });
 
     $(document).on('click', "[data-toggle]", function (e) {
         var target = $(this).attr('data-target');
@@ -198,14 +224,14 @@ $(function () {
         $item.parent().find(".item").removeClass("preview");
         $item.addClass('preview');
         var id = $(this).find("li[data-id]").attr('data-id');
-        
+
         // load item id
         $info.find('.poster img').attr('src', $li.attr('data-image'));
-        $info.find('a.play').attr('href', $li.attr('data-media'));
+        $info.find('a.play').attr('href', $li.attr('data-media')).attr('data-image', $li.attr('data-image'));
         $info.find('.details h3 a').text($li.find("h3").text());
         $info.find('.details p').text($li.attr('data-summary'));
         $info.find('.meta .date').text($li.find('.date').text());
-        
+
         if (!$info.is(":visible"))
             $info.slideDown();
     });
@@ -222,6 +248,11 @@ $(function () {
         else
             $("#header").removeClass("opaque");
     });
+    
+    $('#player-modal').on('hidden.bs.modal', function (e) {
+        Global.Player.remove('mediaplayer');
+    });
+    
 });
 function responsive_resize() {
     var current_width = $(window).width();

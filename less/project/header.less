@@ -31,9 +31,12 @@
 }
 .responsive-icon { background: transparent; border: 0 none; box-shadow: 0 0 0 transparent; }
 .header-links {
-    position: absolute; top: 0; left: 200px;
+    position: absolute; top: 0; right: 0;
     li {
-        line-height: @header-height;
+        line-height: @header-height; float: left; padding: 0 15px;
+        a {
+            &:hover { color: @blue; }
+        }
     }
 }
 

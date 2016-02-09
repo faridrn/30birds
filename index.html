@@ -16,7 +16,9 @@
 		<script src="/js/handlebars-v4.0.5.js"></script>
 		<script src="/js/pace.min.js"></script>
 		<script src="/js/header.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
 		<script src="/js/owl.carousel.min.js"></script>
+		<script src="/js/jwplayer.js"></script>
 		<script src="/js/main.js"></script>
 	</head>
 	<body class="bd">
@@ -26,29 +28,38 @@
 					<div class="row">
 						<div class="col-xs-6 col-sm-4 col-md-4">
 							<h1 class="logo"><a href="/">30Birds</a></h1>
-							<ul class="header-links list-inline list-unstyled">
+							<ul class="header-links list-inline list-unstyled hide">
 								<li><a href="#">Live</a></li>
 								<li><a href="#">VOD</a></li>
 								<li><a href="#">AOD</a></li>
 							</ul>
 						</div>
 						<div class="col-sm-4 col-md-6">
-							<button data-toggle="fade" data-target=".search" class="responsive-icon pull-right hidden-md hidden-lg"><i class="icon-search"></i></button>
-							<div class="search">
-								<div class="form-group">
-									<input type="text" name="q" class="form-control" placeholder="Search..." />
-									<button type="submit" class="search-submit"><i class="icon-search"></i></button>
-									<button role="close">&times;</button>
+							<div class="hide">
+								<button data-toggle="fade" data-target=".search" class="responsive-icon pull-right hidden-md hidden-lg"><i class="icon-search"></i></button>
+								<div class="search">
+									<div class="form-group">
+										<input type="text" name="q" class="form-control" placeholder="Search..." />
+										<button type="submit" class="search-submit"><i class="icon-search"></i></button>
+										<button role="close">&times;</button>
+									</div>
 								</div>
 							</div>
 						</div>
 						<div id="user-area" class="col-xs-3 col-sm-4 col-md-2">
-							<a href="#" data-toggle="fade" data-target=".user-menu"><i class="icon-user"></i> Farid</a>
-							<ul class="user-menu">
-								<li><a href="#"><i class="icon-wrench"></i> My Profile</a></li>
-								<li><a href="#"><i class="icon-users"></i> Account Settings</a></li>
-								<li><a href="#"><i class="icon-lock"></i> Logout</a></li>
+							<ul class="header-links list-inline list-unstyled">
+								<li><a href="#">Live</a></li>
+								<li><a href="#">VOD</a></li>
+								<li><a href="#">AOD</a></li>
 							</ul>
+							<div class="hide">
+								<a href="#" data-toggle="fade" data-target=".user-menu"><i class="icon-user"></i> Farid</a>
+								<ul class="user-menu">
+									<li><a href="#"><i class="icon-wrench"></i> My Profile</a></li>
+									<li><a href="#"><i class="icon-users"></i> Account Settings</a></li>
+									<li><a href="#"><i class="icon-lock"></i> Logout</a></li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -71,8 +82,6 @@
 						<li><a href="#">Terms of Use</a></li>
 						<li><a href="#">Privacy Policy</a></li>
 						<li><a href="#">Contact</a></li>
-						<li><a href="#">API</a></li>
-						<li><a href="#">Advertise</a></li>
 					</ul>
 				</div>
 				<div id="copyright" class="row">
@@ -82,6 +91,20 @@
 				</div>
 			</div>
 		</footer>
+
+		<!-- Modals -->
+		<div class="modal zoom fade" tabindex="-1" role="dialog" id="player-modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					</div>
+					<div class="modal-body">
+						<div id="mediaplayer"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script id="children-template" type="text/x-handlebars-template">
 			{{#each []}}
@@ -113,12 +136,12 @@
 						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
 							<img src="" alt="" />
-							<a href="" class="play"><i class="icon-play"></i></a>
+							<a href="" data-image="" class="play"><i class="icon-play"></i></a>
 						</figure>
 						<div class="details">
-							<h3><a class="play" href=""></a></h3>
+							<h3><a class="play" data-image="" href=""></a></h3>
 							<div class="meta">
-								<span class="date">Date: 2016-01-25</span>
+								<span class="date"></span>
 								<span class="duration hide"></span>
 							</div>
 							<p></p>
