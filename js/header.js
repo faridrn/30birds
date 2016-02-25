@@ -2,12 +2,60 @@ var debug = true; // in development stage
 
 var Config = {
     html5mode: true
+    , paths: ['vod', 'live', 'aod']
+};
+var Global = {
+    pageTitle: '30Birds'
+    , getLinkParams: function ($obj) {
+        var href;
+        if (Location.get().indexOf(Location.parent) === -1)
+            href = Location.parent + '/' + $obj.attr('href');
+        else
+            href = '/' + Location.get() + '/' + Global.trimChar($obj.attr('href'), '/');
+        return {
+            href: href
+            , title: $obj.attr('href').split('-')[1].replace('/', '')
+        };
+    }
+    , t: function(full) {
+        if (typeof full !== "undefined" && full === true)
+            return (new Date).getTime();
+        else
+            return ((new Date).getTime()).toString().substr(8);
+    }
+    , Player: {
+        setup: function (obj, file, image) {
+            jwplayer(obj).setup({
+                abouttext: "30Birds"
+                , aboutlink: "http://"
+                , file: file
+                , image: image
+                , width: '100%'
+                , aspectratio: '16:9'
+                , stretching: "uniform"
+                , controls: !0
+                , autostart: !1
+            });
+        }
+        , remove: function (obj) {
+            jwplayer(obj).remove();
+        }
+    }
+    , trimChar: function (string, charToRemove) {
+        while (string.charAt(0) === charToRemove)
+            string = string.substring(1);
+        while (string.charAt(string.length - 1) === charToRemove)
+            string = string.substring(0, string.length - 1);
+        return string;
+    }
 };
 var Services = {
     base: 'http://217.218.67.231/'
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
-    , items: 'content/{pid}.json'
-    , query: 'query/getsectionjson/{id}'
+    , vodItems: 'content/{pid}.json'
+    , liveItems: 'content/live.json'
+//    , aodItems: 'content/live.json'
+    , vodQuery: 'query/getsectionjson/{id}'
 };
 var Request = {
     log: function (data) {
@@ -16,42 +64,44 @@ var Request = {
     }
 };
 var Location = {
-    splitter: '#'
+    splitter: '/'
     , parts: []
-    , history: []
-    , 'setParts': {set: function (x) {
-            this.parts = x;
-        }}
-    , init: function () {
-        $(window).on('hashchange', function () {
-            var fragments = location.href.split(Location.splitter)[1];
-            Location.parts = Location.parse(fragments);
-            if (Location.parts[0] === 'history' && Location.parts[1] === 'back')
-                if (Location.history.length > 1)
-                    Location.goBack();
-                else
-                    Location.redirect(false, 'dashboard/items');
-            Location.history.push(fragments);
-        });
+    , parent: ''
+    , init: function (again) {
+        debug && !again && console.log(Global.t() + ' Location.init()');
+        Location.parts = Location.getCurrent();
+//        console.log(Location.parts[0]);
+//        return;
+        Location.parent = Location.parts[0];
+        if (!Location.parts.length || Location.parts[0] === "" || ($.inArray(Location.parts[0], Config.paths) < 0)) {
+            history.pushState(null, Global.pageTitle, '/vod');
+            Location.parent = 'vod';
+            debug && console.log(Global.t() + ' Location.init() again! because location changed suddenly.');
+            Location.init(true);
+        }
         // init on-render tools
     }
     , getCurrent: function () {
-        var fragments = location.href.split(Location.splitter)[1];
-        Location.history.push(fragments);
-        Location.parts = Location.parse(fragments);
+        var fragments = [];
+        var f = location.pathname.replace('http://', '').replace('https://', '').replace('www', '').split(Location.splitter);
+        for (i = 0; i < f.length; i++)
+            if (f[i] !== "")
+                fragments.push(f[i]);
+        debug && console.log(Global.t() + ' Current Location parts: ' + fragments);
+//        Location.parts = fragments;
+        return fragments;
     }
     , get: function (full) {
-        return (typeof full !== "undefined" && full === true) ? location.href : location.pathname;
+        return (typeof full !== "undefined" && full === true) ? location.href : Global.trimChar(location.pathname, '/');
     }
     , parse: function (fragments) {
         if (typeof fragments !== "undefined") {
             var parts = fragments.split('/');
             Location.parts = parts;
-            debug && console.log(parts);
+            debug && console.log(Global.t() + ' Location Parts: ' + parts);
             return parts;
         } else {
-            debug && console.warn('no url fragments');
-            Location.redirect(false, 'dashboard/items');
+            return false;
         }
         return false;
     }
@@ -69,8 +119,6 @@ var Location = {
     }
     , refresh: function () {
         location.reload();
-    }
-    , paths: {
     }
 };
 var Cookie = {
@@ -159,3 +207,4 @@ var token = Cookie.check();
 //if (typeof token === "undefined" || token === null)
 //    if (Location.get() !== '/login.html')
 //        Location.redirect('/login.html');
+//Location.init();

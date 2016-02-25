@@ -1,15 +1,20 @@
 var App = {
     firstInit: false
     , start: function (title) {
-        new Data(new HandleLocation(Location.get()).id);
+        debug && console.log(Global.t() + ' App Started');
+        Location.init();
+        new Data(new HandleLocation(Location.parts).path);
         document.title = (typeof title === "undefined") ? Global.pageTitle : Global.pageTitle + ' - ' + title; // Set title
         if (App.firstInit === false) {
+            debug && console.log(Global.t() + ' App::NOT first init');
             App.firstInit = true;
             App.addListeners();
-        }
+        } else
+            debug && console.log(Global.t() + ' App::first init');
     }
     , navigate: function (params) {
         history.pushState(null, params.title, params.href);
+        Location.init();
         App.start(params.title);
     }
     , addListeners: function () {
@@ -18,77 +23,60 @@ var App = {
                 App.start();
         };
 
-        // Resoinsive Utilities
+        /* Resoinsive Utilities */
         responsive_resize();
-        $(window).resize(function () { // Change width value on user resize, after DOM
+        $(window).resize(function () { /* Change width value on user resize, after DOM */
             responsive_resize();
         });
         return null;
     }
 };
-var Global = {
-    pageTitle: '30Birds'
-    , getLinkParams: function ($obj) {
-        return {
-            href: $obj.attr('href')
-            , title: $obj.attr('href').split('-')[1].replace('/', '')
-        };
-    }
-    , Player: {
-        setup: function (obj, file, image) {
-            jwplayer(obj).setup({
-                abouttext: "30Birds"
-                , aboutlink: "http://"
-                , file: file
-                , image: image
-                , width: '100%'
-//                , height: '100%'
-                , aspectratio: '16:9'
-                , stretching: "uniform"
-                , controls: !0
-                , autostart: !1
-            });
-        }
-        , remove: function(obj) {
-            jwplayer(obj).remove();
-        }
-    }
-};
-function HandleLocation(url) {
+function HandleLocation(parts) {
     "use strict";
 
-    this.url = url;
-    this.id;
+    this.parts = parts;
+    this.path;
 
-    this.getId = function (url) {
-        var parts = url.split('/');
+    this.getPath = function (parts) {
+        debug && console.log(Global.t() + ' Get params [id] from url');
         var last = parts.pop();
-        var part = (last !== "") ? last : parts.pop();
-        var id = part.split('-')[0];
-        return id;
+        if ($.inArray(last, Config.paths) >= 0)
+            return [last, 0];
+        return [parts[0], last.split('-')[0]];
     };
 
     var __construct = function (that) {
-        that.id = that.getId(that.url);
+        debug && console.log(Global.t() + ' HandleLocation::construct()');
+        that.path = that.getPath(that.parts);
+        console.log(that.path);
     }(this);
 }
 
-function Data(id) {
-    this.id = id;
+function Data(path) {
+    this.path = path;
     this.params;
-    this.getParams = function (pid) {
-        var pid = (typeof pid === "undefined" || pid === "") ? 0 : pid;
+    this.args;
+    this.getParams = function (path) {
+        debug && console.log(Global.t() + ' Create Data parameters object to load parent data');
+        args = {type: path[0], id: path[1]};
+        args.id = (typeof args.id === "undefined" || args.id === "") ? 0 : args.id;
+        if ($.inArray(args.type, Config.paths) >= 0) {
+            var itemsSource = Services[args.type + 'Items'];
+            var childrenSource = Services[args.id + 'Query'];
+        } else 
+            return;
         return params = {
-            parentId: pid
-            , url: Services.base + Services.items.replace(/{pid}/gi, pid)
-            , childrenUrl: Services.base + Services.query
-            , template: $("#items-template").html()
+            parentId: args.id
+            , url: Services.base + (itemsSource.replace(/{pid}/gi, args.id))
+            , childrenUrl: Services.base + childrenSource
+            , template: (Location.parent === "live") ? $("#liveitems-template").html() : $("#items-template").html()
             , childrenTemplate: $("#children-template").html()
             , data: null
             , container: $("#panels")
         };
     };
     this.loadParent = function (params) {
+        debug && console.log(Global.t() + ' Data -> Load parents data');
         var o = this;
         $.ajax({
             url: params.url
@@ -103,8 +91,8 @@ function Data(id) {
         return params;
     };
     this.loadChildren = function (params, data) {
+        debug && console.log(Global.t() + ' Data -> Load children');
         var o = this;
-//        console.log(data);
         $.each(data, function () {
             var id = this.id;
             var url = this.url;
@@ -113,7 +101,8 @@ function Data(id) {
                 , success: function (d) {
                     var templateHtml = o.compileTemplate(params.childrenTemplate, d);
                     $("ul#items-" + id).html(templateHtml).promise().done(function () {
-                        createCarousel($("ul#items-" + id));
+                        if (Location.parent !== "live")
+                            createCarousel($("ul#items-" + id));
                     });
                 }
             });
@@ -122,11 +111,13 @@ function Data(id) {
         return params;
     };
     this.compileTemplate = function (tmpl, data) {
+        debug && console.log(Global.t() + ' Data -> Compiling template');
         var template = Handlebars.compile(tmpl);
         var html = template(data);
         return html;
     };
     this.updateBreadcrumbs = function () {
+        debug && console.log(Global.t() + ' Update Breadcrumbs');
         var urlParts = Location.get().split('/');
         $("#breadcrumbs ol").empty();
         if (urlParts.length > 3) {
@@ -139,7 +130,8 @@ function Data(id) {
     };
 
     var __construct = function (that) {
-        that.params = that.getParams(id);
+        debug && console.log(Global.t() + ' Data::construct()');
+        that.params = that.getParams(path);
         that.loadParent(that.params);
         that.updateBreadcrumbs();
     }(this);
@@ -153,7 +145,7 @@ $(function () {
         App.navigate(o);
         e.preventDefault();
     });
-    
+
     $(document).on('click', "a.play", function (e) {
         var $this = $(this);
         $("#player-modal").modal();
@@ -210,9 +202,13 @@ $(function () {
         e.preventDefault();
     });
 
-    $(document).on('click', ".carousel .item", function (e) {
+    $(document).on('click', ".carousel .item, [data-id=live] li", function (e) {
         var $item = $(this);
-        var $li = $(this).find("li:first");
+        console.warn($item.prop("tagName"));
+        if ($item.prop("tagName") === "LI")
+            var $li = $(this);
+        else
+            var $li = $(this).find("li:first");
         var $info = $item.parents(".panel").find(".item-info");
         if ($item.hasClass('preview')) {
             $info.slideUp(function () {
@@ -225,7 +221,6 @@ $(function () {
         $item.addClass('preview');
         var id = $(this).find("li[data-id]").attr('data-id');
 
-        // load item id
         $info.find('.poster img').attr('src', $li.attr('data-image'));
         $info.find('a.play').attr('href', $li.attr('data-media')).attr('data-image', $li.attr('data-image'));
         $info.find('.details h3 a').text($li.find("h3").text());
@@ -248,16 +243,15 @@ $(function () {
         else
             $("#header").removeClass("opaque");
     });
-    
+
     $('#player-modal').on('hidden.bs.modal', function (e) {
         Global.Player.remove('mediaplayer');
     });
-    
+
 });
 function responsive_resize() {
     var current_width = $(window).width();
     if (current_width < 768) {
-        // XS
         $('body').addClass("_xs").removeClass("_sm _md _lg");
     } else if (current_width > 767 && current_width < 992) {
         $('body').addClass("_sm").removeClass("_xs _md _lg");
@@ -272,7 +266,6 @@ function createCarousel($carousel) {
     if (!$carousel.length)
         return false;
 
-//    $carousels.each(function () {
     $carousel.owlCarousel({
         responsive: {
             1199: {items: 5}
@@ -282,7 +275,6 @@ function createCarousel($carousel) {
         }
         , items: 5
         , nav: true
-//            , navContainer: $nav
         , navContainerClass: 'pagers'
         , navClass: ['prev', 'next']
         , navText: ['', '']
@@ -292,5 +284,4 @@ function createCarousel($carousel) {
         , itemClass: 'item'
         , dots: false
     });
-//    });
 }
