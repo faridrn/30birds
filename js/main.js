@@ -67,23 +67,36 @@ function Data(path) {
             return;
         return params = {
             parentId: args.id
+            , type: Location.parent
             , url: Services.base + (itemsSource.replace(/{pid}/gi, args.id))
-            , childrenUrl: Services.base + childrenSource
             , template: (Location.parent === "live") ? $("#liveitems-template").html() : $("#items-template").html()
             , childrenTemplate: $("#children-template").html()
             , data: null
             , container: $("#panels")
+            // More items ???
+            , url2: (args.type === "home") ? Services.homeItems2 : null
         };
     };
-    this.loadParent = function (params) {
+    this.handle = function(data) {
+        $.each(data, function() {
+            this.PubDate = (typeof this.PubDate !== "undefined") ? Global.convertTime(this.PubDate) : null;
+        });
+        return data;
+    }
+    this.loadParent = function (params, append) {
         debug && console.log(Global.t() + ' Data -> Load parents data');
+        append = (typeof append !== "undefined") ? append : false;
         var o = this;
         $.ajax({
-            url: params.url
+            url: (append === true) ? params.url2 : params.url
             , success: function (d) {
                 params.data = d;
                 var templateHtml = o.compileTemplate(params.template, d);
-                params.container.html(templateHtml).promise().done(function () {
+                if (append === true)
+                    params.container.append(templateHtml);
+                else
+                    params.container.html(templateHtml);
+                params.container.promise().done(function () {
                     o.loadChildren(params, d);
                 });
             }
@@ -94,8 +107,8 @@ function Data(path) {
         debug && console.log(Global.t() + ' Data -> Load children');
         var o = this;
         $.each(data, function () {
-            var id = this.id;
-            var url = this.url;
+            var id = this.SiteItemID;
+            var url = this.Url;
             $.ajax({
                 url: url
                 , success: function (d) {
@@ -113,7 +126,7 @@ function Data(path) {
     this.compileTemplate = function (tmpl, data) {
         debug && console.log(Global.t() + ' Data -> Compiling template');
         var template = Handlebars.compile(tmpl);
-        var html = template(data);
+        var html = template(this.handle(data));
         return html;
     };
     this.updateBreadcrumbs = function () {
@@ -133,6 +146,10 @@ function Data(path) {
         debug && console.log(Global.t() + ' Data::construct()');
         that.params = that.getParams(path);
         that.loadParent(that.params);
+        if (that.params.url2 !== null) {
+            debug && console.log(Global.t() + ' Data::construct() => More than one parent on page, appending new items');
+            that.loadParent(that.params, true);
+        }
         that.updateBreadcrumbs();
     }(this);
 }

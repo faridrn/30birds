@@ -2,7 +2,7 @@ var debug = true; // in development stage
 
 var Config = {
     html5mode: true
-    , paths: ['vod', 'live', 'aod']
+    , paths: ['home', 'vod', 'live', 'aod']
 };
 var Global = {
     pageTitle: '30Birds'
@@ -17,7 +17,7 @@ var Global = {
             , title: $obj.attr('href').split('-')[1].replace('/', '')
         };
     }
-    , t: function(full) {
+    , t: function (full) {
         if (typeof full !== "undefined" && full === true)
             return (new Date).getTime();
         else
@@ -48,10 +48,35 @@ var Global = {
             string = string.substring(0, string.length - 1);
         return string;
     }
+    , convertTime: function (timestamp) {
+        var d = new Date(timestamp * 1000), // Convert the passed timestamp to milliseconds
+                yyyy = d.getFullYear(),
+                mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
+                dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
+                hh = d.getHours(),
+                h = hh,
+                min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
+                ampm = 'AM',
+                time;
+        if (hh > 12) {
+            h = hh - 12;
+            ampm = 'PM';
+        } else if (hh === 12) {
+            h = 12;
+            ampm = 'PM';
+        } else if (hh === 0) {
+            h = 12;
+        }
+        // ie: 2013-02-18, 8:35 AM	
+        time = yyyy + '-' + mm + '-' + dd + ' ' + h + ':' + min + ' ' + ampm;
+        return time;
+    }
 };
 var Services = {
     base: 'http://217.218.67.231/'
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
+    , homeItems: 'content/{pid}.json'
+    , homeItems2: '/data/parstoday.json'
     , vodItems: 'content/{pid}.json'
     , liveItems: 'content/live.json'
 //    , aodItems: 'content/live.json'
@@ -74,8 +99,8 @@ var Location = {
 //        return;
         Location.parent = Location.parts[0];
         if (!Location.parts.length || Location.parts[0] === "" || ($.inArray(Location.parts[0], Config.paths) < 0)) {
-            history.pushState(null, Global.pageTitle, '/vod');
-            Location.parent = 'vod';
+            history.pushState(null, Global.pageTitle, '/home');
+            Location.parent = 'home';
             debug && console.log(Global.t() + ' Location.init() again! because location changed suddenly.');
             Location.init(true);
         }

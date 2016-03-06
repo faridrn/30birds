@@ -108,7 +108,7 @@
 
 		<script id="children-template" type="text/x-handlebars-template">
 			{{#each []}}
-			<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}">
+			<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="{{MediaType}}">
 				<figure>
 					<img src="{{Thumbnail}}" alt="{{Title}}" />
 					<figcaption>
@@ -116,7 +116,7 @@
 							<h3>{{Title}}</h3>
 							<div class="meta">
 								<span class="date">{{PubDate}}</span>
-								<span class="duration hide"></span>
+								<span class="duration hide">{{Duration}}</span>
 							</div>
 						</div>
 					</figcaption>
@@ -126,12 +126,12 @@
 		</script>
 		<script id="items-template" type="text/x-handlebars-template">
 			{{#each []}}
-			<div class="panel items is-carousel" data-conf='{""}' data-id="{{id}}">
+			<div class="panel items is-carousel" data-conf='{""}' data-id="{{SiteItemID}}">
 				<div class="panel-title">
-					{{#if haschildren}}<a class="page" href="{{id}}-{{name}}/">{{name}}</a>{{else}}{{name}}{{/if}}
+					{{#if AfterwardsUrl}}<a class="page" href="{{SiteItemID}}-{{Title}}/">{{Title}}</a>{{else}}{{Title}}{{/if}}
 				</div>
 				<div class="panel-body">
-					<ul id="items-{{id}}"></ul>
+					<ul id="items-{{SiteItemID}}"></ul>
 					<div class="item-info" style="display: none;">
 						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
@@ -152,20 +152,20 @@
 			{{/each}}
 		</script>
 		<script id="liveitems-template" type="text/x-handlebars-template">
-			<div class="panel items is-carousel" data-conf='{""}' data-id="live">
+			<div class="panel items" data-conf='{""}' data-id="live">
 				<div class="panel-title">Live Streams</div>
 				<div class="panel-body">
-					<ul id="items-0">
+					<ul id="items-live">
 						{{#each []}}
-						<li class="" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}">
+						<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="{{MediaType}}">
 							<figure>
 								<img src="{{Thumbnail}}" alt="{{Title}}" />
 								<figcaption>
 									<div class="inner">
 										<h3>{{Title}}</h3>
 										<div class="meta">
-											<span class="date hide">{{PubDate}}</span>
-											<span class="duration hide"></span>
+											<span class="date">{{PubDate}}</span>
+											<span class="duration hide">{{Duration}}</span>
 										</div>
 									</div>
 								</figcaption>
@@ -174,7 +174,7 @@
 						{{/each}}
 					</ul>
 					<div class="item-info" style="display: none;">
-						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
+						<button role="close" class="hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
 							<img src="" alt="" />
 							<a href="" data-image="" class="play"><i class="icon-play"></i></a>
