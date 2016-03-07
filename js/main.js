@@ -61,20 +61,22 @@ function Data(path) {
         args = {type: path[0], id: path[1]};
         args.id = (typeof args.id === "undefined" || args.id === "") ? 0 : args.id;
         if ($.inArray(args.type, Config.paths) >= 0) {
-            var itemsSource = Services[args.type + 'Items'];
+            var itemsSource = Services[args.type];
             var childrenSource = Services[args.id + 'Query'];
         } else 
             return;
         return params = {
             parentId: args.id
             , type: Location.parent
-            , url: Services.base + (itemsSource.replace(/{pid}/gi, args.id))
+            , url: Services.base + (itemsSource[0].url.replace(/{pid}/gi, args.id))
+            , urlParams: itemsSource[0].params
             , template: (Location.parent === "live") ? $("#liveitems-template").html() : $("#items-template").html()
             , childrenTemplate: $("#children-template").html()
             , data: null
             , container: $("#panels")
             // More items ???
-            , url2: (args.type === "home") ? Services.homeItems2 : null
+            , url2: (args.type === "home") ? itemsSource[1].url : null
+            , url2params: (args.type === "home") ? itemsSource[1].params : null
         };
     };
     this.handle = function(data) {
@@ -92,18 +94,19 @@ function Data(path) {
             , success: function (d) {
                 params.data = d;
                 var templateHtml = o.compileTemplate(params.template, d);
-                if (append === true)
+                if (append === true) {
                     params.container.append(templateHtml);
-                else
+                    // TODO: sometimes its not working, needs investigation
+                } else
                     params.container.html(templateHtml);
                 params.container.promise().done(function () {
-                    o.loadChildren(params, d);
+                    o.loadChildren(params, d, append);
                 });
             }
         });
         return params;
     };
-    this.loadChildren = function (params, data) {
+    this.loadChildren = function (params, data, append) {
         debug && console.log(Global.t() + ' Data -> Load children');
         var o = this;
         $.each(data, function () {
@@ -114,7 +117,9 @@ function Data(path) {
                 , success: function (d) {
                     var templateHtml = o.compileTemplate(params.childrenTemplate, d);
                     $("ul#items-" + id).html(templateHtml).promise().done(function () {
-                        if (Location.parent !== "live")
+                        if (typeof append !== "undefined" && append === true && params.url2Params.carousel === true)
+                            createCarousel($("ul#items-" + id));
+                        else if (Location.parent !== "live" && params.urlParams.carousel === true)
                             createCarousel($("ul#items-" + id));
                     });
                 }

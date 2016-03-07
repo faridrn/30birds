@@ -75,12 +75,35 @@ var Global = {
 var Services = {
     base: 'http://217.218.67.231/'
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
-    , homeItems: 'content/{pid}.json'
-    , homeItems2: '/data/parstoday.json'
-    , vodItems: 'content/{pid}.json'
-    , liveItems: 'content/live.json'
-//    , aodItems: 'content/live.json'
     , vodQuery: 'query/getsectionjson/{id}'
+    , home: [
+        {
+            url: 'content/{pid}.json'
+            , params: { carousel: true }
+        }
+        , {
+            url: '/data/parstoday.json'
+            , params: { carousel: false }
+        }
+    ]
+    , vod: [
+        {
+            url: 'content/{pid}.json'
+            , params: { carousel: true }
+        }
+    ]
+    , aod: [
+        {
+            url: 'content/{pid}.json'
+            , params: { carousel: true }
+        }
+    ]
+    , live: [
+        {
+            url: 'content/live.json'
+            , params: { carousel: false }
+        }
+    ]
 };
 var Request = {
     log: function (data) {
