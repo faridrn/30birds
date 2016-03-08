@@ -91,6 +91,7 @@ function Data(path) {
         var o = this;
         $.ajax({
             url: (append === true) ? params.url2 : params.url
+            , dataType: "json"
             , success: function (d) {
                 params.data = d;
                 var templateHtml = o.compileTemplate(params.template, d);
@@ -107,20 +108,22 @@ function Data(path) {
         return params;
     };
     this.loadChildren = function (params, data, append) {
-        debug && console.log(Global.t() + ' Data -> Load children');
+        debug && console.log(Global.t() + ' Data -> Load children & append:', append);
         var o = this;
         $.each(data, function () {
             var id = this.SiteItemID;
             var url = this.Url;
             $.ajax({
                 url: url
+                , dataType: "json"
                 , success: function (d) {
                     var templateHtml = o.compileTemplate(params.childrenTemplate, d);
                     $("ul#items-" + id).html(templateHtml).promise().done(function () {
-                        if (typeof append !== "undefined" && append === true && params.url2Params.carousel === true)
+                        if (typeof append !== "undefined" && append !== true && Location.parent !== "live") {
                             createCarousel($("ul#items-" + id));
-                        else if (Location.parent !== "live" && params.urlParams.carousel === true)
-                            createCarousel($("ul#items-" + id));
+                        } else {
+                            
+                        }
                     });
                 }
             });
@@ -171,7 +174,17 @@ $(function () {
     $(document).on('click', "a.play", function (e) {
         var $this = $(this);
         $("#player-modal").modal();
-        Global.Player.setup('mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+        var playerType = $(this).attr('data-type');
+        switch (playerType) {
+            default:
+            case 'video':
+                Global.Player.setup('video', 'mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+                break;
+            case 'live':
+                Global.Player.setup('live', 'mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+                break;
+        }
+
         e.preventDefault();
     });
 
@@ -226,7 +239,6 @@ $(function () {
 
     $(document).on('click', ".carousel .item, [data-id=live] li", function (e) {
         var $item = $(this);
-        console.warn($item.prop("tagName"));
         if ($item.prop("tagName") === "LI")
             var $li = $(this);
         else

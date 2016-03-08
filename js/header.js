@@ -24,21 +24,61 @@ var Global = {
             return ((new Date).getTime()).toString().substr(8);
     }
     , Player: {
-        setup: function (obj, file, image) {
-            jwplayer(obj).setup({
-                abouttext: "30Birds"
-                , aboutlink: "http://"
-                , file: file
-                , image: image
-                , width: '100%'
-                , aspectratio: '16:9'
-                , stretching: "uniform"
-                , controls: !0
-                , autostart: !1
-            });
+        setup: function (type, obj, file, image) {
+            switch (type) {
+                case 'video':
+                    jwplayer(obj).setup({
+//                        abouttext: "30Birds"
+//                        , aboutlink: "http://"
+                        file: file
+                        , image: image
+                        , width: '100%'
+//                        , height: '100%'
+                        , aspectratio: '16:9'
+                        , stretching: "uniform"
+                        , controls: !0
+                        , autostart: true
+                        , autostart: !1
+                    });
+                    break;
+                case 'live':
+                    var html = '<video width="100%" height="auto" poster="' + image + '" autoplay><source src="' + file + '"></video>';
+                    $('#' + obj).html(html);
+                    $("body").addClass('live-playing');
+                    $('video').mediaelementplayer({
+                        features: []
+                        , enableAutosize: true
+                        , alwaysShowControls: false
+                    });
+                    Global.Player.liveplayerHabdler();
+                    $(window).resize(function () {
+                        Global.Player.liveplayerHabdler(true);
+                    });
+                    break;
+            }
         }
         , remove: function (obj) {
-            jwplayer(obj).remove();
+            if (typeof jwplayer(obj) === "object")
+                jwplayer(obj).remove();
+            else {
+                $("body").removeClass('live-playing');
+                $('#' + obj).empty();
+            }
+        }
+        , liveplayerHabdler: function (immediate) {
+            var timeout = (typeof immediate !== "undefined" && immediate === true) ? 1 : 500;
+            $(".modal-content").css({'height': '100vh'});
+            window.setTimeout(function () {
+                var w = $(".modal-content").width();
+                var h = $(".modal-content").height();
+                var hh = w / 1.77777777777777;
+                $("#mediaplayer").css({'height': hh, 'width': '100%', 'position': 'absolute'});
+                $(".mejs-container, .mejs-inner, .me-plugin, embed").css({'height': hh, 'width': '100%'});
+                var mt = ((hh / 2) * -1);
+                console.log(mt, hh);
+                $("#mediaplayer").css({'margin-top': mt, 'top': '50%'});
+            }, timeout);
+
         }
     }
     , trimChar: function (string, charToRemove) {
@@ -79,29 +119,29 @@ var Services = {
     , home: [
         {
             url: 'content/{pid}.json'
-            , params: { carousel: true }
+            , params: {carousel: true}
         }
         , {
             url: '/data/parstoday.json'
-            , params: { carousel: false }
+            , params: {carousel: false}
         }
     ]
     , vod: [
         {
             url: 'content/{pid}.json'
-            , params: { carousel: true }
+            , params: {carousel: true}
         }
     ]
     , aod: [
         {
             url: 'content/{pid}.json'
-            , params: { carousel: true }
+            , params: {carousel: true}
         }
     ]
     , live: [
         {
             url: 'content/live.json'
-            , params: { carousel: false }
+            , params: {carousel: false}
         }
     ]
 };

@@ -11,16 +11,17 @@
 		<meta name="description" content="{Description}">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/js/mediaelement/build/mediaelementplayer.min.css ">
 		<script src="/js/modernizr-2.6.2.min.js"></script>
 		<script src="/js/jquery-1.11.3.min.js"></script>
 		<script src="/js/handlebars-v4.0.5.js"></script>
+		<script src="/js/player/player.js"></script>
+		<script src="/js/mediaelement/build/mediaelement-and-player.min.js"></script>
 		<script src="/js/pace.min.js"></script>
 		<script src="/js/header.js"></script>
 		<script src="/js/bootstrap.min.js"></script>
 		<script src="/js/owl.carousel.min.js"></script>
-		<script src="/js/jwplayer.js"></script>
 		<script src="/js/main.js"></script>
-		<script>jwplayer.key="J9zpeKNg61CajQRCrIpmbSiCB5vl/5rFXm29+xWOs/I=";</script>
 	</head>
 	<body class="bd">
 		<header id="header" class="">
@@ -137,10 +138,10 @@
 						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
 							<img src="" alt="" />
-							<a href="" data-image="" class="play"><i class="icon-play"></i></a>
+							<a href="" data-image="" class="play" data-type="video"><i class="icon-play"></i></a>
 						</figure>
 						<div class="details">
-							<h3><a class="play" data-image="" href=""></a></h3>
+							<h3><a class="play" data-image="" href="" data-type="video"></a></h3>
 							<div class="meta">
 								<span class="date"></span>
 								<span class="duration hide"></span>
@@ -178,10 +179,10 @@
 						<button role="close" class="hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
 							<img src="" alt="" />
-							<a href="" data-image="" class="play"><i class="icon-play"></i></a>
+							<a href="" data-image="" class="play" data-type="live"><i class="icon-play"></i></a>
 						</figure>
 						<div class="details">
-							<h3><a class="play" data-image="" href=""></a></h3>
+							<h3><a class="play" data-image="" href="" data-type="live"></a></h3>
 							<div class="meta">
 								<span class="date hide"></span>
 								<span class="duration hide"></span>
