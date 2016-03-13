@@ -32,6 +32,9 @@
             & > li, .item {
                 width: 228px; float: left; transition: all 0.5s; position: relative; margin-bottom: (@grid-gutter-width / 2); z-index: 130;
                 padding: 0 (@grid-gutter-width / 10);
+                [data-dir="rtl"] {
+                    direction: rtl; text-align: right;
+                }
                 figure {
                     position: relative; overflow: hidden;
                     img { display: block; width: 100%; height: auto; }
@@ -66,6 +69,9 @@
                     &:before { display: block; width: 30px; height: 30px; margin: -15px 0 0 -15px; font-family: 'ott'; position: absolute; bottom: -4px; left: 50%; content: '\E817'; font-size: 36px; text-align: center; line-height: 27px; transition: @t; }
                     &:hover:before { color: @blue; border-color: @blue-light; }
                 }
+            }
+            [data-href] {
+                figcaption:before { display: none; }
             }
         }
         .pagers {
