@@ -110,7 +110,7 @@
 
 		<script id="children-template" type="text/x-handlebars-template">
 			{{#each []}}
-			<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="{{MediaType}}">
+			<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="{{MediaType}}" {{#if params.followLinks}}data-href={{route params.type Title}}{{/if}}>
 				<figure>
 					<img src="{{Thumbnail}}" alt="{{Title}}" />
 					<figcaption>
@@ -128,12 +128,13 @@
 		</script>
 		<script id="items-template" type="text/x-handlebars-template">
 			{{#each []}}
-			<div class="panel items is-carousel" data-conf='{""}' data-id="{{SiteItemID}}">
+			<div class="panel items" data-conf='{""}' data-id="{{SiteItemID}}" data-title="{{Title}}" {{#if params.followLinks}}data-follow-links="true"{{/if}}>
 				<div class="panel-title">
-					{{#if AfterwardsUrl}}<a class="page" href="{{SiteItemID}}-{{Title}}/">{{Title}}</a>{{else}}{{Title}}{{/if}}
+					{{#if AfterwardsUrl}}<a class="page" href="{{route params.type Title}}">{{Title}}</a>{{else}}{{Title}}{{/if}}
 				</div>
 				<div class="panel-body">
-					<ul id="items-{{SiteItemID}}"></ul>
+					<ul id="items-{{createId params.type SiteItemID}}"></ul>
+					{{#if followLinks}}{{else}}
 					<div class="item-info" style="display: none;">
 						<button role="close hide" data-toggle="slide" data-target="$this .item-info">&times;</button>
 						<figure class="poster">
@@ -149,6 +150,7 @@
 							<p></p>
 						</div>
 					</div>
+					{{/if}}
 				</div>
 			</div>
 			{{/each}}

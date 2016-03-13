@@ -1,4 +1,5 @@
 var debug = true; // in development stage
+var baseAddress = 'http://217.218.67.231/';
 
 var Config = {
     html5mode: true
@@ -6,15 +7,35 @@ var Config = {
 };
 var Global = {
     pageTitle: '30Birds'
+    , registerHabdlebarsHelpers: function () {
+        Handlebars.registerHelper('toLowerCase', function (str) {
+            return str.toLowerCase();
+        });
+        Handlebars.registerHelper('createId', function (type, title) {
+            return Global.addPrefix(type, title);
+        });
+        Handlebars.registerHelper('route', function (type, title) {
+            var path, currentLocation = Location.getCurrent();
+            if (currentLocation[0] !== type)
+                path = '/' + type + '/' + title.toLowerCase();
+            else
+                path = '/' + currentLocation.join('/') + '/' + title.toLowerCase();
+            return path;
+        });
+    }
     , getLinkParams: function ($obj) {
-        var href;
-        if (Location.get().indexOf(Location.parent) === -1)
-            href = Location.parent + '/' + $obj.attr('href');
-        else
-            href = '/' + Location.get() + '/' + Global.trimChar($obj.attr('href'), '/');
+        var href, link = ($obj.attr('data-href') !== "undefined") ? $obj.attr('data-href') : $obj.attr('href');;
+        if (link.charAt(0) === '/') {
+            href = link;
+        } else {
+            if (Location.get().indexOf(Location.parent) === -1)
+                href = Location.parent + '/' + link;
+            else
+                href = '/' + Location.get() + '/' + Global.trimChar(link, '/');
+        }
         return {
             href: href
-            , title: $obj.attr('href').split('-')[1].replace('/', '')
+            , title: link.replace('/', '')
         };
     }
     , t: function (full) {
@@ -111,37 +132,42 @@ var Global = {
         time = yyyy + '-' + mm + '-' + dd + ' ' + h + ':' + min + ' ' + ampm;
         return time;
     }
+    , addPrefix: function(type, title) {
+        // TODO: for items without mediaType
+        var firstChar = (type.toString().charAt(0)).toLowerCase();
+        return id = firstChar + title.toString().toLowerCase();
+    }
 };
 var Services = {
-    base: 'http://217.218.67.231/'
+    base: baseAddress
     , login: 'http://www.irinn.ir:8080/webservice.asmx/getToken'
     , vodQuery: 'query/getsectionjson/{id}'
     , home: [
         {
-            url: 'content/{pid}.json'
-            , params: {carousel: true}
+            url: baseAddress + 'content/30birds/vod.json'
+            , params: {type: 'vod', carousel: true, append: false}
         }
         , {
-            url: '/data/parstoday.json'
-            , params: {carousel: false}
+            url: baseAddress + 'content/30birds/aod.json'
+            , params: {type: 'aod', carousel: false, append: true, followLinks: true}
         }
     ]
     , vod: [
         {
-            url: 'content/{pid}.json'
-            , params: {carousel: true}
+            url: baseAddress + 'content/30birds/{pid}.json'
+            , params: {type: 'vod', carousel: true, append: false}
         }
     ]
     , aod: [
         {
-            url: 'content/{pid}.json'
-            , params: {carousel: true}
+            url: baseAddress + 'content/30birds/{pid}.json'
+            , params: {type: 'aod', carousel: true, append: false}
         }
     ]
     , live: [
         {
-            url: 'content/live.json'
-            , params: {carousel: false}
+            url: baseAddress + 'content/30birds/live.json'
+            , params: {type: 'live', carousel: false, append: false}
         }
     ]
 };
@@ -158,6 +184,7 @@ var Location = {
     , init: function (again) {
         debug && !again && console.log(Global.t() + ' Location.init()');
         Location.parts = Location.getCurrent();
+        debug && console.log(Global.t() + ' Current Location parts: ' + Location.parts);
 //        console.log(Location.parts[0]);
 //        return;
         Location.parent = Location.parts[0];
@@ -175,8 +202,6 @@ var Location = {
         for (i = 0; i < f.length; i++)
             if (f[i] !== "")
                 fragments.push(f[i]);
-        debug && console.log(Global.t() + ' Current Location parts: ' + fragments);
-//        Location.parts = fragments;
         return fragments;
     }
     , get: function (full) {
@@ -207,6 +232,13 @@ var Location = {
     }
     , refresh: function () {
         location.reload();
+    }
+    , getParentLocation: function(fragments) {
+//        $.each(fragments, function(i) {
+//            if ($.inArray(this.toString(), Config.paths) >= 0)
+//                delete fragments[i];
+//        });
+        return fragments.join('/');
     }
 };
 var Cookie = {

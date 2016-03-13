@@ -11,6 +11,7 @@ var App = {
             App.addListeners();
         } else
             debug && console.log(Global.t() + ' App::first init');
+        Global.registerHabdlebarsHelpers();
     }
     , navigate: function (params) {
         history.pushState(null, params.title, params.href);
@@ -33,22 +34,20 @@ var App = {
 };
 function HandleLocation(parts) {
     "use strict";
-
     this.parts = parts;
     this.path;
 
     this.getPath = function (parts) {
-        debug && console.log(Global.t() + ' Get params [id] from url');
+        debug && console.log(Global.t() + ' Get params from url');
         var last = parts.pop();
         if ($.inArray(last, Config.paths) >= 0)
             return [last, 0];
-        return [parts[0], last.split('-')[0]];
+        return [parts[0], last];
     };
 
     var __construct = function (that) {
-        debug && console.log(Global.t() + ' HandleLocation::construct()');
         that.path = that.getPath(that.parts);
-        console.log(that.path);
+        debug && console.log(Global.t() + ' HandleLocation::construct()', that.path);
     }(this);
 }
 
@@ -57,73 +56,87 @@ function Data(path) {
     this.params;
     this.args;
     this.getParams = function (path) {
-        debug && console.log(Global.t() + ' Create Data parameters object to load parent data');
         args = {type: path[0], id: path[1]};
+        debug && console.log(Global.t() + ' Create Data parameters object to load parent data:', args);
         args.id = (typeof args.id === "undefined" || args.id === "") ? 0 : args.id;
-        if ($.inArray(args.type, Config.paths) >= 0) {
-            var itemsSource = Services[args.type];
-            var childrenSource = Services[args.id + 'Query'];
-        } else 
+        if ($.inArray(args.type, Config.paths) < 0)
             return;
-        return params = {
+        
+        var parentLocation = Location.getParentLocation(Location.getCurrent());
+        var params = {
             parentId: args.id
             , type: Location.parent
-            , url: Services.base + (itemsSource[0].url.replace(/{pid}/gi, args.id))
-            , urlParams: itemsSource[0].params
             , template: (Location.parent === "live") ? $("#liveitems-template").html() : $("#items-template").html()
             , childrenTemplate: $("#children-template").html()
             , data: null
             , container: $("#panels")
-            // More items ???
-            , url2: (args.type === "home") ? itemsSource[1].url : null
-            , url2params: (args.type === "home") ? itemsSource[1].params : null
+            , sources: [
+                {
+                    url: Services[args.type][0].url.replace(/{pid}/gi, parentLocation)
+                    , params: Services[args.type][0].params
+                }
+            ]
         };
+        if (Services[args.type].length > 0) {
+            for (i = 1; i < Services[args.type].length; i++) {
+                params.sources.push({
+                    url: Services[args.type][i].url.replace(/{pid}/gi, parentLocation)
+                        , params: Services[args.type][i].params
+                });
+            }
+        }
+        return params;
     };
-    this.handle = function(data) {
-        $.each(data, function() {
+    this.handle = function (data, params) {
+        $.each(data, function () {
             this.PubDate = (typeof this.PubDate !== "undefined") ? Global.convertTime(this.PubDate) : null;
+            if (typeof params !== "undefined")
+                this.params = params;
+//            console.warn(params);
+//            if (typeof params.type !== "undefined")
+//                this.params.type = 'aod'; // TODO
         });
         return data;
     }
-    this.loadParent = function (params, append) {
+    this.loadParent = function (params, index) {
         debug && console.log(Global.t() + ' Data -> Load parents data');
-        append = (typeof append !== "undefined") ? append : false;
         var o = this;
+        
+        index = (typeof index !== "undefined") ? index : 0;
+        var append = (typeof params.sources[index].params.append !== "undefined") ? params.sources[index].params.append : false;
         $.ajax({
-            url: (append === true) ? params.url2 : params.url
+            url: params.sources[index].url
             , dataType: "json"
             , success: function (d) {
                 params.data = d;
-                var templateHtml = o.compileTemplate(params.template, d);
+                var templateHtml = o.compileTemplate(params.template, d, params.sources[index].params);
                 if (append === true) {
                     params.container.append(templateHtml);
                     // TODO: sometimes its not working, needs investigation
                 } else
                     params.container.html(templateHtml);
                 params.container.promise().done(function () {
-                    o.loadChildren(params, d, append);
+                    o.loadChildren(params, d, index);
                 });
             }
         });
-        return params;
+//        return params;
     };
-    this.loadChildren = function (params, data, append) {
-        debug && console.log(Global.t() + ' Data -> Load children & append:', append);
+    this.loadChildren = function (params, data, index) {
+        debug && console.log(Global.t() + ' Data -> Load children & append:', params.sources[index].params.append, ' & carousel:', params.sources[index].params.carousel);
         var o = this;
         $.each(data, function () {
-            var id = this.SiteItemID;
             var url = this.Url;
+            var uid = this.SiteItemID
             $.ajax({
                 url: url
                 , dataType: "json"
                 , success: function (d) {
-                    var templateHtml = o.compileTemplate(params.childrenTemplate, d);
+                    var id = Global.addPrefix(params.sources[index].params.type, uid);
+                    var templateHtml = o.compileTemplate(params.childrenTemplate, d, params.sources[index].params, id);
                     $("ul#items-" + id).html(templateHtml).promise().done(function () {
-                        if (typeof append !== "undefined" && append !== true && Location.parent !== "live") {
+                        if (params.sources[index].params.carousel === true)
                             createCarousel($("ul#items-" + id));
-                        } else {
-                            
-                        }
                     });
                 }
             });
@@ -131,10 +144,11 @@ function Data(path) {
 
         return params;
     };
-    this.compileTemplate = function (tmpl, data) {
-        debug && console.log(Global.t() + ' Data -> Compiling template');
+    this.compileTemplate = function (tmpl, data, params, uid) {
+        data = this.handle(data, params);
+        debug && console.log(Global.t() + ' Data -> Compiling template:', (typeof uid === "undefined" ? 'parent' : 'children: ' + uid));
         var template = Handlebars.compile(tmpl);
-        var html = template(this.handle(data));
+        var html = template(data);
         return html;
     };
     this.updateBreadcrumbs = function () {
@@ -153,11 +167,9 @@ function Data(path) {
     var __construct = function (that) {
         debug && console.log(Global.t() + ' Data::construct()');
         that.params = that.getParams(path);
-        that.loadParent(that.params);
-        if (that.params.url2 !== null) {
-            debug && console.log(Global.t() + ' Data::construct() => More than one parent on page, appending new items');
-            that.loadParent(that.params, true);
-        }
+        $.each(that.params.sources, function(i) {
+            that.loadParent(that.params, i);
+        });
         that.updateBreadcrumbs();
     }(this);
 }
@@ -267,6 +279,12 @@ $(function () {
 
     $(document).on('click', ".search button[role=close]", function (e) {
         $(".search").fadeOut();
+        e.preventDefault();
+    });
+    
+    $(document).on('click', "li[data-href]", function (e) {
+        var o = Global.getLinkParams($(this));
+        App.navigate(o)
         e.preventDefault();
     });
 
