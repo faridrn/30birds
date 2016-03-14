@@ -47,6 +47,7 @@ var Global = {
     , Player: {
         setup: function (type, obj, file, image) {
             switch (type) {
+                default:
                 case 'video':
                     jwplayer(obj).setup({
 //                        abouttext: "30Birds"
@@ -161,7 +162,7 @@ var Services = {
     , aod: [
         {
             url: baseAddress + 'content/30birds/{pid}.json'
-            , params: {type: 'aod', carousel: true, append: false}
+            , params: {type: 'aod', carousel: false, append: false, followLinks: true}
         }
     ]
     , live: [
