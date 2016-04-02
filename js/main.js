@@ -249,7 +249,7 @@ $(function () {
         e.preventDefault();
     });
 
-    $(document).on('click', ".carousel .item, [data-id=live] li", function (e) {
+    $(document).on('click', ".carousel .item", function (e) {
         var $item = $(this);
         if ($item.prop("tagName") === "LI")
             var $li = $(this);
@@ -267,6 +267,11 @@ $(function () {
         $item.addClass('preview');
         var id = $(this).find("li[data-id]").attr('data-id');
 
+        if (typeof $li.attr('data-dir') !== "undefined")
+            if ($li.attr('data-dir') === "rtl")
+                $info.addClass('rtl');
+            else
+                $info.removeClass('rtl');
         $info.find('.poster img').attr('src', $li.attr('data-image'));
         $info.find('a.play').attr('href', $li.attr('data-media')).attr('data-image', $li.attr('data-image'));
         $info.find('.details h3 a').text($li.find("h3").text());
