@@ -123,7 +123,10 @@
                 font-family: Vazir;
                 button[role="close"] { right: auto; left: 0; }
                 .details { text-align: right; direction: rtl; left: auto; right: 0; background: linear-gradient(to left, rgba(20,20,20,1) 0%,rgba(20,20,20,1) 60%,rgba(0,0,0,0) 100%); }
-                .poster { float: left; }
+                .poster {
+                    float: left;
+                    .play { right: auto; left: 30%; }
+                }
                 .meta span:before { margin-right: 0; margin-left: (@grid-gutter-width / 4); }
             }
         }
