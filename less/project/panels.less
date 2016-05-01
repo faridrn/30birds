@@ -70,6 +70,7 @@
                     &:before { display: block; width: 30px; height: 30px; margin: -15px 0 0 -15px; font-family: 'ott'; position: absolute; bottom: -4px; left: 50%; content: '\E817'; font-size: 36px; text-align: center; line-height: 27px; transition: @t; }
                     &:hover:before { color: @blue; border-color: @blue-light; }
                 }
+                .desc { display: none; }
             }
             [data-href] {
                 figcaption:before { display: none; }
@@ -129,6 +130,16 @@
                 }
                 .meta span:before { margin-right: 0; margin-left: (@grid-gutter-width / 4); }
             }
+        }
+    }
+}
+
+body.visible-desc {
+    .panel.items ul li {
+        figcaption h3 { display: none; }
+        & > .desc {
+            padding-top: 4px; display: block;
+            h3 { color: @gray-lighter; font-size: 16px; margin: 0; padding: 0 4px; }
         }
     }
 }

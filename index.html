@@ -15,7 +15,7 @@
 		<script src="/js/modernizr-2.6.2.min.js"></script>
 		<script src="/js/jquery-1.11.3.min.js"></script>
 		<script src="/js/handlebars-v4.0.5.js"></script>
-		<script src="/js/player/player.js"></script>
+		<script src="/js/jwplayer.js"></script>
 		<script src="/js/mediaelement/build/mediaelement-and-player.min.js"></script>
 		<script src="/js/pace.min.js"></script>
 		<script src="/js/header.js"></script>
@@ -123,6 +123,7 @@
 						</div>
 					</figcaption>
 				</figure>
+				<div class="desc"><h3>{{Title}}</h3></div>
 			</li>
 			{{/each}}
 		</script>
@@ -161,7 +162,7 @@
 				<div class="panel-body">
 					<ul id="items-live">
 						{{#each []}}
-						<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="{{MediaType}}">
+						<li class="{{CssClass}}" data-id="{{SiteItemID}}" data-media="{{Media}}" data-image="{{Image}}" data-summary="{{Summary}}" data-dir="{{Direction}}" data-type="live">
 							<figure>
 								<img src="{{Thumbnail}}" alt="{{Title}}" />
 								<figcaption>

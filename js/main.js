@@ -183,17 +183,22 @@ $(function () {
         e.preventDefault();
     });
 
-    $(document).on('click', "a.play", function (e) {
+    $(document).on('click', "a.play, li[data-type=live]", function (e) {
         var $this = $(this);
         $("#player-modal").modal();
         var playerType = $(this).attr('data-type');
+        var videoSource = '';
+        if ($this.prop("tagName") === "LI")
+            videoSource = $this.attr('data-media');
+        else
+            videoSource = $this.attr('href');
         switch (playerType) {
             default:
             case 'video':
-                Global.Player.setup('video', 'mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+                Global.Player.setup('video', 'mediaplayer', videoSource, $(this).attr('data-image'));
                 break;
             case 'live':
-                Global.Player.setup('live', 'mediaplayer', $(this).attr('href'), $(this).attr('data-image'));
+                Global.Player.setup('live', 'mediaplayer', videoSource, $(this).attr('data-image'));
                 break;
         }
 

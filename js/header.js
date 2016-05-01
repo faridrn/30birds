@@ -24,7 +24,8 @@ var Global = {
         });
     }
     , getLinkParams: function ($obj) {
-        var href, link = ($obj.attr('data-href') !== "undefined") ? $obj.attr('data-href') : $obj.attr('href');;
+        var href, link = ($obj.attr('data-href') !== "undefined") ? $obj.attr('data-href') : $obj.attr('href');
+        ;
         if (link.charAt(0) === '/') {
             href = link;
         } else {
@@ -60,11 +61,11 @@ var Global = {
                         , stretching: "uniform"
                         , controls: !0
                         , autostart: true
-                        , autostart: !1
+                        , autostart: true
                     });
                     break;
                 case 'live':
-                    var html = '<video width="100%" height="auto" poster="' + image + '" autoplay><source src="' + file + '"></video>';
+                    var html = '<video width="100%" height="auto" poster="' + image + '" autoplay="true"><source src="' + file + '"></video>';
                     $('#' + obj).html(html);
                     $("body").addClass('live-playing');
                     $('video').mediaelementplayer({
@@ -80,9 +81,14 @@ var Global = {
             }
         }
         , remove: function (obj) {
-            if (typeof jwplayer(obj) === "object")
+            if (typeof jwplayer(obj) === "object") {
+                $('#player-modal .modal-body').empty().promise().done(function () {
+                    $('#player-modal .modal-body').append('<div id="mediaplayer"></div>');
+                });
+                return;
+                jwplayer(obj).stop();
                 jwplayer(obj).remove();
-            else {
+            } else {
                 $("body").removeClass('live-playing');
                 $('#' + obj).empty();
             }
@@ -133,7 +139,7 @@ var Global = {
         time = yyyy + '-' + mm + '-' + dd + ' ' + h + ':' + min + ' ' + ampm;
         return time;
     }
-    , addPrefix: function(type, title) {
+    , addPrefix: function (type, title) {
         // TODO: for items without mediaType
         var firstChar = (type.toString().charAt(0)).toLowerCase();
         return id = firstChar + title.toString().toLowerCase();
@@ -234,7 +240,7 @@ var Location = {
     , refresh: function () {
         location.reload();
     }
-    , getParentLocation: function(fragments) {
+    , getParentLocation: function (fragments) {
 //        $.each(fragments, function(i) {
 //            if ($.inArray(this.toString(), Config.paths) >= 0)
 //                delete fragments[i];
